@@ -77,6 +77,10 @@ const FILE_SCHEMES = {
   'tw-file-access': {
     root: path.resolve(__dirname, '../src-renderer/file-access'),
     csp: "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'"
+  },
+  'tw-mcp-panel': {
+    root: path.resolve(__dirname, '../src-renderer/mcp-panel'),
+    csp: "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'"
   }
 };
 

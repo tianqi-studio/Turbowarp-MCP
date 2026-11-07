@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCP 监控面板</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0b0d12;
+    --panel: #141821;
+    --panel-2: #191e29;
+    --border: #272e3d;
+    --text: #e8ecf4;
+    --muted: #8e99ad;
+    --accent: #a78bfa;
+    --accent-2: #7c3aed;
+    --err: #fb7185;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; min-height: 100%; }
+  body {
+    background: radial-gradient(1000px 500px at 30% -10%, #2a1b4d 0%, var(--bg) 58%);
+    color: var(--text);
+    font-family: "Segoe UI", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+  }
+  main {
+    width: min(680px, 100%);
+    background: rgba(20, 24, 33, 0.94);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 34px 38px 30px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #fecdd3;
+    background: rgba(127, 29, 29, 0.28);
+    border: 1px solid #4c2431;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+  }
+  .badge::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--err);
+    box-shadow: 0 0 0 4px rgba(251, 113, 133, 0.12);
+  }
+  h1 { font-size: 25px; margin: 18px 0 8px; letter-spacing: -0.02em; }
+  .lead { color: var(--muted); line-height: 1.65; margin: 0 0 22px; }
+  .box {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  .box.error { border-color: #4c2431; background: rgba(127, 29, 29, 0.14); }
+  .label {
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  code, pre {
+    font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+    font-size: 12px;
+  }
+  code { color: #ddd6fe; word-break: break-all; }
+  pre {
+    margin: 0 0 10px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #0e1118;
+    color: #c7d2fe;
+    overflow-x: auto;
+  }
+  .actions { display: flex; align-items: center; gap: 12px; margin: 22px 0 26px; }
+  button {
+    font: inherit;
+    color: white;
+    background: linear-gradient(145deg, var(--accent-2), #5b21b6);
+    border: 1px solid #7c3aed;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-weight: 650;
+    cursor: pointer;
+    box-shadow: 0 10px 28px rgba(124, 58, 237, 0.25);
+  }
+  button:hover { filter: brightness(1.08); }
+  button:disabled { opacity: 0.65; cursor: default; }
+  .hint { color: var(--muted); font-size: 12px; line-height: 1.6; margin: 0 0 8px; }
+  .hint code { font-size: 11px; }
+  .divider { height: 1px; background: var(--border); margin: 22px 0; }
+</style>
+</head>
+<body>
+<main>
+  <span class="badge">OFFLINE</span>
+  <h1>无法连接 MCP 监控面板</h1>
+  <p class="lead">TurboWarp Desktop 无法访问 MCP 服务器的监控页面。请确认服务器已启动，并且端口与下面显示的地址一致。</p>
+
+  <div class="box">
+    <div class="label">面板地址</div>
+    <code id="dashboard-url">—</code>
+  </div>
+
+  <div class="box error" id="error-box">
+    <div class="label">错误信息</div>
+    <code id="error-message">—</code>
+  </div>
+
+  <div class="actions">
+    <button type="button" id="retry">重新连接</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <p class="hint">启动带 HTTP 传输的 MCP 服务器（推荐，同时提供 /dashboard）：</p>
+  <pre>node dist/index.js --http --port 3000</pre>
+
+  <p class="hint">或者，在 stdio 模式下只启动监控面板：</p>
+  <pre>node dist/index.js --dashboard-port 3000</pre>
+
+  <p class="hint">如果服务器使用其他端口，请在启动 TurboWarp Desktop 前设置环境变量 <code>TW_MCP_DASHBOARD_URL</code>，例如 <code>http://127.0.0.1:3210/dashboard</code>。</p>
+</main>
+<script>
+  var config = McpPanelPreload.getConfig();
+  document.getElementById('dashboard-url').textContent = config.dashboardUrl || '—';
+  if (!config.offlineError) {
+    document.getElementById('error-box').style.display = 'none';
+  } else {
+    document.getElementById('error-message').textContent = config.offlineError;
+  }
+  document.getElementById('retry').addEventListener('click', function () {
+    var button = document.getElementById('retry');
+    button.disabled = true;
+    button.textContent = '正在连接...';
+    McpPanelPreload.retry();
+  });
+</script>
+</body>
+</html>

@@ -9,6 +9,7 @@ const AddonsWindow = require('./addons');
 const DesktopSettingsWindow = require('./desktop-settings');
 const PrivacyWindow = require('./privacy');
 const AboutWindow = require('./about');
+const McpPanelWindow = require('./mcp-panel');
 const PackagerWindow = require('./packager');
 const {createAtomicWriteStream} = require('../atomic-write-stream');
 const {translate, updateLocale, getStrings} = require('../l10n');
@@ -546,6 +547,10 @@ class EditorWindow extends ProjectRunningWindow {
 
     this.ipc.handle('open-about', () => {
       AboutWindow.show();
+    });
+
+    this.ipc.handle('open-mcp-panel', () => {
+      McpPanelWindow.show();
     });
 
     this.ipc.handle('get-advanced-customizations', async () => {

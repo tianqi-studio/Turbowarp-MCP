@@ -1,0 +1,24 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "servers": {
+      "turbowarp": {
+        "type": "local",
+        "command": [
+          "node",
+          "D:\\path\\to\\Turowarp-MCP\\turbowarp-mcp-server\\dist\\index.js",
+          "--workspace",
+          "D:\\path\\to\\Turowarp-MCP\\projects",
+          "--confirm",
+          "destructive",
+          "--dashboard-port",
+          "3000"
+        ],
+        "environment": {
+          "TW_MCP_LOG_LEVEL": "info",
+          "TW_MCP_MAX_SB3_MB": "512"
+        }
+      }
+    }
+  }
+}

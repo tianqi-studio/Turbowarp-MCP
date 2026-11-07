@@ -1,0 +1,2233 @@
+{
+  "generatedAt": "2026-11-07T10:45:32.397Z",
+  "protocolVersion": "2025",
+  "toolCount": 11,
+  "tools": [
+    {
+      "name": "load_sb3",
+      "title": "Load SB3 project",
+      "description": "Open an existing Scratch 3 / TurboWarp .sb3 file and make it the active project. The file is parsed and validated with TurboWarp's scratch-parser fork; assets are kept in memory for later export. This replaces any currently loaded project, so it is a destructive operation. Only SB3 (projectVersion 3) is supported; export SB2/SB1 projects as SB3 in TurboWarp Desktop first. Returns a project overview and any missing asset references.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Path to an SB3 file. Relative paths are resolved inside TW_MCP_WORKSPACE; absolute paths must also be inside it unless --allow-any-path is set. Windows paths with backslashes are accepted."
+          },
+          "confirm": {
+            "description": "Required when the configured confirmation policy gates this tool. Replaces the active project, so confirmation is recommended.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "loaded": {
+            "type": "boolean",
+            "const": true
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "sourcePath": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dirty": {
+            "type": "boolean"
+          },
+          "targetCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "spriteCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "blockCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "scriptCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "variableCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "listCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "broadcastCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "extensions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "missingAssets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "targets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "isStage": {
+                  "type": "boolean"
+                },
+                "blockCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "scriptCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "variableCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "listCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "costumeCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "soundCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "name",
+                "isStage",
+                "blockCount",
+                "scriptCount",
+                "variableCount",
+                "listCount",
+                "costumeCount",
+                "soundCount"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "loaded",
+          "displayName",
+          "sourcePath",
+          "dirty",
+          "targetCount",
+          "spriteCount",
+          "blockCount",
+          "scriptCount",
+          "variableCount",
+          "listCount",
+          "broadcastCount",
+          "extensions",
+          "missingAssets",
+          "targets"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Load SB3 project",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "new_project",
+      "title": "Create a new project",
+      "description": "Create a new, empty Scratch 3 project in memory and make it the active project. A white 480x360 SVG backdrop and (by default) a Sprite1 with a built-in SVG costume are added. No files are written until export_sb3 is called. This replaces any currently loaded project, so it is a destructive operation. Returns a project overview.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Project display name. Defaults to \"Untitled\".",
+            "type": "string"
+          },
+          "with_default_sprite": {
+            "description": "Create a default Sprite1 with a built-in SVG costume. Defaults to true.",
+            "type": "boolean"
+          },
+          "confirm": {
+            "description": "Required when the confirmation policy gates this tool. Creating a project replaces the active project.",
+            "type": "boolean"
+          }
+        },
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "loaded": {
+            "type": "boolean",
+            "const": true
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "sourcePath": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dirty": {
+            "type": "boolean"
+          },
+          "targetCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "spriteCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "blockCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "scriptCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "variableCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "listCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "broadcastCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "extensions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "missingAssets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "targets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "isStage": {
+                  "type": "boolean"
+                },
+                "blockCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "scriptCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "variableCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "listCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "costumeCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "soundCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "name",
+                "isStage",
+                "blockCount",
+                "scriptCount",
+                "variableCount",
+                "listCount",
+                "costumeCount",
+                "soundCount"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "loaded",
+          "displayName",
+          "sourcePath",
+          "dirty",
+          "targetCount",
+          "spriteCount",
+          "blockCount",
+          "scriptCount",
+          "variableCount",
+          "listCount",
+          "broadcastCount",
+          "extensions",
+          "missingAssets",
+          "targets"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Create a new project",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "list_sprites",
+      "title": "List sprites and Stage",
+      "description": "List every target in the active project with position, size, direction, costume/sound names, block and script counts, and variable/list counts. This is a read-only tool and never changes the project. Use get_scripts to inspect the actual block stacks for a target.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "include_stage": {
+            "description": "Include the Stage entry in the response. Defaults to true. The Stage is never counted as a sprite.",
+            "type": "boolean"
+          }
+        },
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string"
+          },
+          "dirty": {
+            "type": "boolean"
+          },
+          "targetCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "spriteCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "stage": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "isStage": {
+                    "type": "boolean"
+                  },
+                  "visible": {
+                    "type": "boolean"
+                  },
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  },
+                  "size": {
+                    "type": "number"
+                  },
+                  "direction": {
+                    "type": "number"
+                  },
+                  "draggable": {
+                    "type": "boolean"
+                  },
+                  "rotationStyle": {
+                    "type": "string"
+                  },
+                  "currentCostume": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "currentCostumeName": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "costumeCount": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "soundCount": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "blockCount": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "scriptCount": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "variableCount": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "listCount": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "costumes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "dataFormat": {
+                          "type": "string"
+                        },
+                        "assetId": {
+                          "type": "string"
+                        },
+                        "md5ext": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "dataFormat",
+                        "assetId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "sounds": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "dataFormat": {
+                          "type": "string"
+                        },
+                        "assetId": {
+                          "type": "string"
+                        },
+                        "md5ext": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "dataFormat",
+                        "assetId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "isStage",
+                  "currentCostume",
+                  "currentCostumeName",
+                  "costumeCount",
+                  "soundCount",
+                  "blockCount",
+                  "scriptCount",
+                  "variableCount",
+                  "listCount",
+                  "costumes",
+                  "sounds"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sprites": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "isStage": {
+                  "type": "boolean"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "size": {
+                  "type": "number"
+                },
+                "direction": {
+                  "type": "number"
+                },
+                "draggable": {
+                  "type": "boolean"
+                },
+                "rotationStyle": {
+                  "type": "string"
+                },
+                "currentCostume": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "currentCostumeName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "costumeCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "soundCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "blockCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "scriptCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "variableCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "listCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "costumes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "dataFormat": {
+                        "type": "string"
+                      },
+                      "assetId": {
+                        "type": "string"
+                      },
+                      "md5ext": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "dataFormat",
+                      "assetId"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "sounds": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "dataFormat": {
+                        "type": "string"
+                      },
+                      "assetId": {
+                        "type": "string"
+                      },
+                      "md5ext": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "dataFormat",
+                      "assetId"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "name",
+                "isStage",
+                "currentCostume",
+                "currentCostumeName",
+                "costumeCount",
+                "soundCount",
+                "blockCount",
+                "scriptCount",
+                "variableCount",
+                "listCount",
+                "costumes",
+                "sounds"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "displayName",
+          "dirty",
+          "targetCount",
+          "spriteCount",
+          "stage",
+          "sprites"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "List sprites and Stage",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "add_sprite",
+      "title": "Add a sprite",
+      "description": "Add a new sprite to the active project. The sprite gets a PNG or SVG costume (or a built-in SVG costume when costume_path is omitted), a new top layer order, and standard Scratch sprite properties. Sprite names must be unique (case-insensitive). This mutates the active project; call export_sb3 to write it to disk. Returns the new sprite's properties and costume list.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique sprite name. Cannot be \"Stage\" or \"_stage_\", and is compared case-insensitively with existing target names."
+          },
+          "costume_path": {
+            "description": "Optional path to a PNG or SVG costume. Relative paths resolve inside TW_MCP_WORKSPACE. If omitted, a built-in SVG sprite costume is used.",
+            "type": "string"
+          },
+          "costume_name": {
+            "description": "Costume name. Defaults to the costume file basename, or \"costume1\" for the built-in costume.",
+            "type": "string"
+          },
+          "x": {
+            "description": "Initial X position. Defaults to 0.",
+            "type": "number"
+          },
+          "y": {
+            "description": "Initial Y position. Defaults to 0.",
+            "type": "number"
+          },
+          "size": {
+            "description": "Initial size percentage. Defaults to 100.",
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "direction": {
+            "description": "Initial direction in degrees. Defaults to 90.",
+            "type": "number"
+          },
+          "visible": {
+            "description": "Initial visibility. Defaults to true.",
+            "type": "boolean"
+          },
+          "draggable": {
+            "description": "Whether the sprite can be dragged in the editor. Defaults to false.",
+            "type": "boolean"
+          },
+          "rotation_style": {
+            "description": "Initial rotation style. Defaults to \"all around\".",
+            "type": "string",
+            "enum": [
+              "all around",
+              "left-right",
+              "don't rotate"
+            ]
+          },
+          "confirm": {
+            "description": "Required when the confirmation policy gates this tool.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "boolean",
+            "const": true
+          },
+          "dirty": {
+            "type": "boolean",
+            "const": true
+          },
+          "targetCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "spriteCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "sprite": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "isStage": {
+                "type": "boolean"
+              },
+              "visible": {
+                "type": "boolean"
+              },
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "size": {
+                "type": "number"
+              },
+              "direction": {
+                "type": "number"
+              },
+              "draggable": {
+                "type": "boolean"
+              },
+              "rotationStyle": {
+                "type": "string"
+              },
+              "currentCostume": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "currentCostumeName": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "costumeCount": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "soundCount": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "blockCount": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "scriptCount": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "variableCount": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "listCount": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "costumes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "dataFormat": {
+                      "type": "string"
+                    },
+                    "assetId": {
+                      "type": "string"
+                    },
+                    "md5ext": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "dataFormat",
+                    "assetId"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "sounds": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "dataFormat": {
+                      "type": "string"
+                    },
+                    "assetId": {
+                      "type": "string"
+                    },
+                    "md5ext": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "dataFormat",
+                    "assetId"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "name",
+              "isStage",
+              "currentCostume",
+              "currentCostumeName",
+              "costumeCount",
+              "soundCount",
+              "blockCount",
+              "scriptCount",
+              "variableCount",
+              "listCount",
+              "costumes",
+              "sounds"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "created",
+          "dirty",
+          "targetCount",
+          "spriteCount",
+          "sprite"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Add a sprite",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "add_block",
+      "title": "Add a block",
+      "description": "Insert one Scratch 3 block into the active project's Stage or a sprite, either as a new script or attached to an existing script. Built-in defaults and menu shadows are created for known opcodes. Nested reporters, variables, lists, broadcasts, and C-block substacks are supported. Use get_scripts to inspect block ids before appending, inserting, or extending a substack. Unknown extension opcodes are allowed but produce a warning; provide raw inputs when the default metadata is insufficient. This mutates the active project; export_sb3 writes it to disk.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "opcode": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Block opcode or friendly alias, for example \"looks_say\", \"control_repeat\", or \"say\". Unknown opcodes are accepted with a warning; pass raw inputs for them."
+          },
+          "target": {
+            "description": "Target name that receives the block. Defaults to the first sprite, or the Stage when no sprites exist.",
+            "type": "string"
+          },
+          "inputs": {
+            "description": "Input map. Values may be literals, {\"variable\":\"score\"}, {\"list\":\"items\"}, {\"broadcast\":\"start\"}, {\"menu\":\"Sprite2\"} (uses the documented menu), {\"menu\":\"costume1\",\"opcode\":\"looks_costume\"}, a nested {\"block\":{...}} reporter, or {\"raw\":[1,[10,\"text\"]]}.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "fields": {
+            "description": "Field map. Values may be literals or {\"variable\":\"score\"}, {\"list\":\"items\"}, {\"broadcast\":\"start\"}. Raw Scratch field tuples such as [\"name\",\"id\"] are also accepted.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "substacks": {
+            "description": "Substack map, for example {\"SUBSTACK\":[...blocks...], \"SUBSTACK2\":[...]} for control_if_else. Each entry is a chain of block spec objects. Nested values use the same shape as this tool's arguments (opcode/inputs/fields/substacks/mutation).",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            }
+          },
+          "mutation": {
+            "description": "Raw SB3 mutation object for custom blocks and unusual extension blocks. Passed through unchanged.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "mode": {
+            "default": "new",
+            "description": "new = new top-level script; append = after the last block of the anchor script; after = immediately after block_id; start = immediately before block_id; substack = add inside a C-block substack.",
+            "type": "string",
+            "enum": [
+              "new",
+              "append",
+              "start",
+              "after",
+              "substack"
+            ]
+          },
+          "block_id": {
+            "description": "Anchor block id for modes \"append\", \"after\", \"start\", and \"substack\". Use get_scripts to find ids.",
+            "type": "string"
+          },
+          "substack": {
+            "description": "Substack input name for mode \"substack\". Defaults to \"SUBSTACK\"; control_if_else also has \"SUBSTACK2\".",
+            "type": "string"
+          },
+          "position": {
+            "default": "end",
+            "description": "Where to insert inside a substack: \"start\" or \"end\". Defaults to \"end\".",
+            "type": "string",
+            "enum": [
+              "start",
+              "end"
+            ]
+          },
+          "x": {
+            "description": "Script x position for a new top-level script.",
+            "type": "number"
+          },
+          "y": {
+            "description": "Script y position for a new top-level script.",
+            "type": "number"
+          },
+          "confirm": {
+            "description": "Required when the confirmation policy gates this tool.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "opcode"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "new",
+              "append",
+              "start",
+              "after",
+              "substack"
+            ]
+          },
+          "rootId": {
+            "type": "string"
+          },
+          "blockIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "blockCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "scriptCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "dirty": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "target",
+          "mode",
+          "rootId",
+          "blockIds",
+          "warnings",
+          "blockCount",
+          "scriptCount",
+          "dirty"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Add a block",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "get_scripts",
+      "title": "Read scripts",
+      "description": "Read the scripts of the active project as a structured AST plus a compact text rendering. Each block includes its id, opcode, fields, inputs, mutation, and nested reporter/substack structure. Use block ids from this tool with add_block modes after/start/append/substack. Set target to inspect one Stage/sprite, or omit it to read every target (optionally excluding the Stage). This is a read-only tool.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "description": "Target name (Stage or a sprite). When omitted, scripts from every target are returned.",
+            "type": "string"
+          },
+          "include_stage": {
+            "description": "When target is omitted, include the Stage. Defaults to true. Ignored when target is set.",
+            "type": "boolean"
+          },
+          "max_blocks": {
+            "description": "Maximum number of blocks to parse across all returned targets. Defaults to 2000. Increase only when needed; the response can become very large.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50000
+          }
+        },
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string"
+          },
+          "dirty": {
+            "type": "boolean"
+          },
+          "targetCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "totalScripts": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "totalBlocks": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "truncated": {
+            "type": "boolean"
+          },
+          "targets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "isStage": {
+                  "type": "boolean"
+                },
+                "scriptCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "blockCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "truncated": {
+                  "type": "boolean"
+                },
+                "warnings": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "scripts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "index": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "script",
+                          "reporter"
+                        ]
+                      },
+                      "rootId": {
+                        "type": "string"
+                      },
+                      "x": {
+                        "type": "number"
+                      },
+                      "y": {
+                        "type": "number"
+                      },
+                      "stack": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/definitions/__schema0"
+                        }
+                      }
+                    },
+                    "required": [
+                      "index",
+                      "kind",
+                      "rootId",
+                      "x",
+                      "y",
+                      "stack"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "name",
+                "isStage",
+                "scriptCount",
+                "blockCount",
+                "truncated",
+                "warnings",
+                "scripts"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "displayName",
+          "dirty",
+          "targetCount",
+          "totalScripts",
+          "totalBlocks",
+          "truncated",
+          "targets"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false,
+        "definitions": {
+          "__schema0": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "opcode": {
+                "type": "string"
+              },
+              "shadow": {
+                "type": "boolean"
+              },
+              "fields": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              "inputs": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "$ref": "#/definitions/__schema1"
+                }
+              },
+              "mutation": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              },
+              "error": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "opcode",
+              "shadow",
+              "fields",
+              "inputs"
+            ],
+            "additionalProperties": false
+          },
+          "__schema1": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "literal"
+                  },
+                  "value": {},
+                  "primitiveType": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type",
+                  "value",
+                  "primitiveType"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "menu"
+                  },
+                  "value": {},
+                  "opcode": {
+                    "type": "string"
+                  },
+                  "fields": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "type",
+                  "value"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "block"
+                  },
+                  "block": {
+                    "$ref": "#/definitions/__schema0"
+                  },
+                  "shadow": {
+                    "allOf": [
+                      {
+                        "$ref": "#/definitions/__schema1"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "type",
+                  "block"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "stack"
+                  },
+                  "stack": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/__schema0"
+                    }
+                  }
+                },
+                "required": [
+                  "type",
+                  "stack"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "empty"
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "shadowBlock"
+                  },
+                  "block": {
+                    "$ref": "#/definitions/__schema0"
+                  }
+                },
+                "required": [
+                  "type",
+                  "block"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        }
+      },
+      "annotations": {
+        "title": "Read scripts",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "set_variable",
+      "title": "Set a variable",
+      "description": "Set the value of a Scratch variable in the active project, optionally creating it. Scratch scoping is respected: sprite-local variables shadow global variables, and the Stage owns global variables. Use scope=local with a target to keep a variable private to a sprite, or scope=global to force the Stage's variable. This changes the in-memory project only; export_sb3 writes it to disk.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Variable name. Lookup is exact first, then case-insensitive when unambiguous."
+          },
+          "value": {
+            "description": "New value: a string, finite number, boolean, or null. Arrays/objects are not variable values.",
+            "type": [
+              "string",
+              "number",
+              "boolean",
+              "null"
+            ]
+          },
+          "target": {
+            "description": "Target name used for scope resolution. With scope=auto, a local variable on this target shadows a global one. Omit to update a unique variable anywhere.",
+            "type": "string"
+          },
+          "scope": {
+            "default": "auto",
+            "description": "auto = target-local first, then Stage-global; global = only the Stage's variable; local = only the target's variable (target required).",
+            "type": "string",
+            "enum": [
+              "auto",
+              "global",
+              "local"
+            ]
+          },
+          "create": {
+            "default": true,
+            "description": "Create the variable when it does not exist. New variables are global on the Stage unless target+local is requested. Defaults to true.",
+            "type": "boolean"
+          },
+          "confirm": {
+            "description": "Required when the confirmation policy gates this tool.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "value"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "set": {
+            "type": "boolean",
+            "const": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "global",
+              "local"
+            ]
+          },
+          "owner": {
+            "type": "string"
+          },
+          "previousValue": {
+            "type": [
+              "string",
+              "number",
+              "boolean",
+              "null"
+            ]
+          },
+          "value": {
+            "type": [
+              "string",
+              "number",
+              "boolean",
+              "null"
+            ]
+          },
+          "created": {
+            "type": "boolean"
+          },
+          "dirty": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "set",
+          "name",
+          "id",
+          "scope",
+          "owner",
+          "previousValue",
+          "value",
+          "created",
+          "dirty"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Set a variable",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "get_variable",
+      "title": "Read a variable",
+      "description": "Read a Scratch variable from the active project, including its id, scope, owner target, cloud flag, and current value. Scratch scoping is respected: sprite-local variables shadow global ones for that sprite. Returns found=false instead of an error when the variable does not exist. This is a read-only tool.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Variable name. Exact match wins; otherwise a unique case-insensitive match is accepted."
+          },
+          "target": {
+            "description": "Target name used for scope resolution. With scope=auto, a local variable on this target shadows a global one. Omit to search globally and then uniquely across sprites.",
+            "type": "string"
+          },
+          "scope": {
+            "default": "auto",
+            "description": "auto = target-local first, then Stage-global; global = only the Stage's variable; local = only the target's variable (target required).",
+            "type": "string",
+            "enum": [
+              "auto",
+              "global",
+              "local"
+            ]
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "found": {
+            "type": "boolean"
+          },
+          "variable": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "scope": {
+                    "type": "string",
+                    "enum": [
+                      "global",
+                      "local"
+                    ]
+                  },
+                  "owner": {
+                    "type": "string"
+                  },
+                  "isCloud": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "value",
+                  "scope",
+                  "owner",
+                  "isCloud"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "found",
+          "variable"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Read a variable",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "export_sb3",
+      "title": "Export SB3 project",
+      "description": "Serialize the active project to a valid SB3 ZIP archive, preserving original assets. Refuses to export when a costume/sound reference has no asset bytes unless allow_missing_assets=true. If no path is given, overwrites the loaded source file or writes <workspace>/<project>.sb3 for a new project. Parent directories are created as needed. This writes to the filesystem and marks the in-memory project as saved.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "description": "Destination .sb3 path. Relative paths resolve inside TW_MCP_WORKSPACE. If omitted, overwrites the loaded source file, or writes <workspace>/<project name>.sb3 for a new project.",
+            "type": "string"
+          },
+          "pretty": {
+            "default": false,
+            "description": "Pretty-print project.json inside the archive. Larger but easier to inspect. Defaults to false.",
+            "type": "boolean"
+          },
+          "allow_missing_assets": {
+            "default": false,
+            "description": "Export even when costume/sound references have no bytes in the archive. Defaults to false because TurboWarp may fail to load such a project.",
+            "type": "boolean"
+          },
+          "confirm": {
+            "description": "Required when the confirmation policy gates this tool.",
+            "type": "boolean"
+          }
+        },
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "exported": {
+            "type": "boolean",
+            "const": true
+          },
+          "path": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "assetCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "blockCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "missingAssets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dirty": {
+            "type": "boolean",
+            "const": false
+          }
+        },
+        "required": [
+          "exported",
+          "path",
+          "displayName",
+          "bytes",
+          "assetCount",
+          "blockCount",
+          "missingAssets",
+          "dirty"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Export SB3 project",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "run_headless",
+      "title": "Run project headlessly",
+      "description": "Run an SB3 project with scratch-vm in Node (no renderer, audio, camera, or video). Triggers the green flag, captures say/think events, variable and list snapshots, and monitor values, then stops the VM. Use this to smoke-test logic, not to validate visuals or sound. TurboWarp-only extensions, custom extensions, cloud variables, camera/video, microphone, and platform-specific blocks are not available. Forever loops run until duration_ms; stop_when_idle ends ordinary scripts early.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "description": "SB3 file to run. When omitted, the active in-memory project is serialized and run. Relative paths resolve inside TW_MCP_WORKSPACE.",
+            "type": "string"
+          },
+          "duration_ms": {
+            "default": 3000,
+            "description": "Maximum wall-clock run time in milliseconds. Defaults to 3000; maximum 120000.",
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 120000
+          },
+          "turbo": {
+            "default": true,
+            "description": "Enable scratch-vm turbo mode so loops run without frame pacing. Defaults to true.",
+            "type": "boolean"
+          },
+          "stop_when_idle": {
+            "default": true,
+            "description": "Stop early once all scripts have finished and no threads remain. Defaults to true. Forever loops still run until duration_ms.",
+            "type": "boolean"
+          },
+          "confirm": {
+            "description": "Executes project code. Required when TW_MCP_CONFIRM=all; optional under the default \"destructive\" policy.",
+            "type": "boolean"
+          }
+        },
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "ran": {
+            "type": "boolean",
+            "const": true
+          },
+          "projectSource": {
+            "type": "string"
+          },
+          "durationMs": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "timedOut": {
+            "type": "boolean"
+          },
+          "targetCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "threadCount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "say": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "target": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "atMs": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "target",
+                "type",
+                "text",
+                "atMs"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "variables": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "owner": {
+                  "type": "string"
+                },
+                "value": {},
+                "isCloud": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "name",
+                "owner",
+                "value",
+                "isCloud"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "lists": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "owner": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "array",
+                  "items": {}
+                }
+              },
+              "required": [
+                "name",
+                "owner",
+                "value"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "monitors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "opcode": {
+                  "type": "string"
+                },
+                "owner": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "value": {},
+                "visible": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "opcode",
+                "owner",
+                "value",
+                "visible"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "ran",
+          "projectSource",
+          "durationMs",
+          "timedOut",
+          "targetCount",
+          "threadCount",
+          "say",
+          "variables",
+          "lists",
+          "monitors",
+          "errors"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Run project headlessly",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "list_blocks",
+      "title": "List known block opcodes",
+      "description": "List the built-in block registry used by add_block: opcodes, shapes, categories, input names, field names/defaults/options, substacks, aliases, and TurboWarp-only flags. The registry covers the standard Scratch 3 categories plus common TurboWarp blocks, but it is not exhaustive. Unknown extension opcodes can still be inserted with add_block and raw inputs. This is a read-only tool.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "description": "Only return blocks from this category.",
+            "type": "string",
+            "enum": [
+              "motion",
+              "looks",
+              "sound",
+              "events",
+              "control",
+              "sensing",
+              "operators",
+              "data",
+              "procedures"
+            ]
+          },
+          "turbo_warp_only": {
+            "description": "When true, return only blocks marked as TurboWarp-specific. Defaults to false (all blocks).",
+            "type": "boolean"
+          }
+        },
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "motion",
+                  "looks",
+                  "sound",
+                  "events",
+                  "control",
+                  "sensing",
+                  "operators",
+                  "data",
+                  "procedures"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "blocks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "opcode": {
+                  "type": "string"
+                },
+                "shape": {
+                  "type": "string",
+                  "enum": [
+                    "hat",
+                    "stack",
+                    "cap",
+                    "reporter",
+                    "boolean",
+                    "menu"
+                  ]
+                },
+                "category": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "inputs": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "kind": {
+                        "type": "string"
+                      },
+                      "default": {
+                        "type": [
+                          "string",
+                          "number"
+                        ]
+                      },
+                      "menu": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "kind"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "fields": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "default": {
+                        "type": "string"
+                      },
+                      "kind": {
+                        "type": "string"
+                      },
+                      "options": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "default",
+                      "kind"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "substacks": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "turboWarpOnly": {
+                  "type": "boolean"
+                },
+                "aliases": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "opcode",
+                "shape",
+                "category",
+                "description",
+                "inputs",
+                "fields",
+                "substacks",
+                "turboWarpOnly",
+                "aliases"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "count",
+          "category",
+          "blocks"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "List known block opcodes",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "turbowarp": {
+      "command": "node",
+      "args": [
+        "D:\\path\\to\\Turowarp-MCP\\turbowarp-mcp-server\\dist\\index.js",
+        "--workspace",
+        "D:\\path\\to\\Turowarp-MCP\\projects",
+        "--confirm",
+        "destructive"
+      ],
+      "env": {
+        "TW_MCP_LOG_LEVEL": "warn"
+      }
+    }
+  }
+}

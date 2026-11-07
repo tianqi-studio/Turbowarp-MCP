@@ -58,6 +58,10 @@ const handleClickAbout = () => {
   EditorPreload.openAbout();
 };
 
+const handleClickMcpPanel = () => {
+  EditorPreload.openMcpPanel();
+};
+
 const handleClickSourceCode = () => {
   window.open('https://github.com/TurboWarp');
 };
@@ -220,6 +224,10 @@ const DesktopHOC = function (WrappedComponent) {
             {
               title: this.messages['in-app-about.desktop-settings'],
               onClick: handleClickDesktopSettings
+            },
+            {
+              title: this.messages['in-app-about.mcp-panel'],
+              onClick: handleClickMcpPanel
             },
             {
               title: this.messages['in-app-about.privacy'],

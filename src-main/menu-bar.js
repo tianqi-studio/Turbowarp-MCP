@@ -7,6 +7,7 @@ const AboutWindow = require('./windows/about');
 const DesktopSettingsWindow = require('./windows/desktop-settings');
 const AddonsWindow = require('./windows/addons');
 const EditorWindow = require('./windows/editor');
+const McpPanelWindow = require('./windows/mcp-panel');
 const PackagerWindow = require('./windows/packager');
 
 const rebuildMenuBar = () => {
@@ -35,6 +36,12 @@ const rebuildMenuBar = () => {
             label: translate('menu.addons'),
             click: () => {
               AddonsWindow.show();
+            }
+          },
+          {
+            label: translate('menu.mcp-panel'),
+            click: () => {
+              McpPanelWindow.show();
             }
           },
           {

@@ -47,6 +47,10 @@
     "string": "Addons",
     "developer_comment": "macOS menu bar item to open addon settings window"
   },
+  "menu.mcp-panel": {
+    "string": "MCP Panel",
+    "developer_comment": "macOS menu bar item to open the MCP monitoring panel"
+  },
   "menu.package": {
     "string": "Package Project",
     "developer_comment": "macOS menu bar item to package the project opened in the editor"
@@ -155,6 +159,10 @@
     "string": "Desktop Settings",
     "developer_comment": "Part of the in-app (?) button's menu. Opens desktop settings window."
   },
+  "in-app-about.mcp-panel": {
+    "string": "MCP Panel",
+    "developer_comment": "Part of the in-app (?) button's menu. Opens the MCP monitoring panel."
+  },
   "in-app-about.privacy": {
     "string": "Privacy Policy",
     "developer_comment": "Part of the in-app (?) button's menu. Opens privacy policy window."
@@ -170,6 +178,10 @@
   "desktop-settings.title": {
     "string": "Desktop Settings",
     "developer_comment": "Title of desktop settings window"
+  },
+  "mcp-panel.title": {
+    "string": "MCP Panel",
+    "developer_comment": "Title of the MCP monitoring panel window"
   },
   "desktop-settings.update-checker-not-allowed": {
     "string": "Updates are managed by the store you installed the app from.",

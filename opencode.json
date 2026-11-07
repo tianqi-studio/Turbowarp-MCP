@@ -1,0 +1,22 @@
+{
+  "mcp": {
+    "servers": {
+      "turbowarp": {
+        "type": "local",
+        "command": [
+          "node",
+          "D:/编程项目/OpenCode/Turowarp-MCP/turbowarp-mcp-server/dist/index.js",
+          "--workspace",
+          "D:/编程项目/OpenCode/Turowarp-MCP/projects",
+          "--confirm",
+          "destructive",
+          "--dashboard-port",
+          "3000"
+        ],
+        "environment": {
+          "TW_MCP_LOG_LEVEL": "info"
+        }
+      }
+    }
+  }
+}
